@@ -7,6 +7,7 @@ and reports their distribution, rather than pooling them into one estimate.
 import collections
 import json
 import math
+import statistics
 from pathlib import Path
 
 from sampling import FIRST_YEAR, LAST_YEAR
@@ -100,17 +101,13 @@ def domain_shares(weights):
     return {domain: value / total for domain, value in mass.items()}
 
 
-def headline_weights(weights):
-    """Return each paper's weight in the headline domains (antimicrobial plus oncology)."""
-    return {pmid: sum(w.get(d, 0.0) for d in REPORTED_DOMAINS) for pmid, w in weights.items()}
-
-
-def headline_fraction(outcome_cells, pmids, model, prompt, headline):
-    """Return the share of answered papers that fall in the headline domains and answer yes."""
-    answered = [p for p in pmids if (p, model, prompt) in outcome_cells]
-    yes = sum(headline[p] for p in answered
-              if outcome_cells[(p, model, prompt)]["synergy_desirable"] == "yes")
-    return yes / len(answered) if answered else 0.0
+def headline_rate(outcome_cells, pmids, weights, model, prompt):
+    """Return the summed share-times-rate of the headline domains (antimicrobial plus oncology)."""
+    subset = {pmid: weights[pmid] for pmid in pmids}
+    shares = domain_shares(subset)
+    return sum(shares.get(domain, 0.0)
+               * rate_row(outcome_cells, pmids, model, prompt, weights_for(subset, domain))["rate"]
+               for domain in REPORTED_DOMAINS)
 
 
 def resolve_domains(domain_cells, pmids):
@@ -214,14 +211,14 @@ def report_configurations(outcome_cells, pmids, weights):
         print(forest_line(row))
     rates = [r["rate"] for r in rows]
     print(f"\n  range {100 * min(rates):.1f}-{100 * max(rates):.1f}%  "
-          f"median {100 * sorted(rates)[len(rates) // 2]:.1f}%")
+          f"median {100 * statistics.median(rates):.1f}%")
     for domain in REPORTED_DOMAINS:
         subset = sorted(all_configurations(outcome_cells, pmids, weights_for(weights, domain)),
                         key=lambda r: r["rate"])
         span = [r["rate"] for r in subset]
         print(f"  {domain:16s} n={subset[0]['n']:.0f}  "
               f"range {100 * min(span):.1f}-{100 * max(span):.1f}%  "
-              f"median {100 * sorted(span)[len(span) // 2]:.1f}%")
+              f"median {100 * statistics.median(span):.1f}%")
 
 
 def report_consensus(outcome_cells, pmids):
@@ -255,8 +252,7 @@ def report_magnitude(outcome_cells, pmids, weights, per_year):
     print(f"  mean gated papers/year {mean_annual_gated:.0f} "
           f"({min(per_year)}-{max(per_year)}, {len(per_year)} years)")
     print(f"  all domains: {min(counts):.0f}-{max(counts):.0f} papers/year")
-    headline = headline_weights(weights)
-    counts = [mean_annual_gated * headline_fraction(outcome_cells, pmids, m, p, headline)
+    counts = [mean_annual_gated * headline_rate(outcome_cells, pmids, weights, m, p)
               for m in MODELS for p in PROMPTS]
     print(f"  antimicrobial + oncology: {min(counts):.0f}-{max(counts):.0f} papers/year")
     shares = domain_shares(weights)

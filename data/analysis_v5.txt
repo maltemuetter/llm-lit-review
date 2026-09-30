@@ -31,8 +31,8 @@ SPECIFICATION CURVE — % yes per configuration
   claude   P4_symmetry    ----------[*----------------------  35.2% [32-38]  n=984.0
 
   range 22.0-35.2%  median 30.8%
-  antimicrobial    n=95  range 56.3-79.2%  median 70.0%
-  oncology         n=231  range 48.5-79.2%  median 72.5%
+  antimicrobial    n=95  range 56.3-79.2%  median 68.4%
+  oncology         n=231  range 48.5-79.2%  median 71.9%
 
 PER-PAPER CONSENSUS (yes-count across 10 configurations)
 ========================================================
@@ -59,10 +59,6 @@ IMPLIED MAGNITUDE
 =================
   mean gated papers/year 13742 (2010-2025, 16 years)
   all domains: 3027-4832 papers/year
-  antimicrobial + oncology: 2350-3540 papers/year
+  antimicrobial + oncology: 2343-3549 papers/year
   antimicrobial    share 10%  735-1034 papers/year
   oncology         share 23%  1539-2515 papers/year
-figures written to: ['/Users/malte/ETH-Documents/opinion_piece/llm-lit-review/figures', '/Users/malte/ETH-Documents/opinion_piece/supplementary/figures']
-window 2010-2025, mean gated 13742/year
-trend slope +341.6 papers/year (mean across configurations, yearly rates)
-Spearman rho = 0.774, p = 4.39e-04 (n = 16 years)
