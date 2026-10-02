@@ -35,7 +35,6 @@ add API keys for Mistral and Anthropic (only needed for the LLM steps).
 - `code/`: pipeline scripts
 - `data/`: PubMed snapshots and screening results
 - `figures/`, `report/`: figures and an automated summary report
-- `archive/`: earlier versions of the design
 
 ## Status
 
