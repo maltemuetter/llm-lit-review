@@ -44,8 +44,7 @@ def caption(per_year):
             "estimated number of eligible papers per year across all domains, both with 95\\% "
             "confidence intervals (normal approximation). Rates are scaled to the mean number "
             f"of eligible papers per year: {total:,} papers over {years} years (2010--2025), "
-            f"i.e.\\ $\\bar{{N}}$ = {total / years:,.0f}. Estimates for antimicrobial and "
-            "oncology papers are shown in \\autoref{fig:swarm}.}")
+            f"i.e.\\ $\\bar{{N}}$ = {total / years:,.0f}.}}")
 
 
 def build_table(rows, per_year):
