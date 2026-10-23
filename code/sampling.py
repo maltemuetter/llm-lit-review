@@ -3,6 +3,7 @@
 The pool is every in-window paper whose title or abstract uses a synerg* word
 (see synergy_gate.py). Records are fetched fresh from PubMed while walking a
 seeded shuffle, keeping complete abstracts until the target size is reached.
+The saved sample omits abstracts; they are kept in a local, untracked cache.
 """
 
 import json
@@ -17,6 +18,7 @@ from pathlib import Path
 DATA_DIR = Path(__file__).parent.parent / "data"
 ELIGIBLE_YEARS_PATH = DATA_DIR / "synerg_paper_years.json"
 SAMPLE_PATH = DATA_DIR / "screening_sample_v5.json"
+ABSTRACTS_PATH = DATA_DIR / "sample_abstracts.json"
 SAMPLE_SIZE = 1000
 
 FIRST_YEAR = 2010
@@ -128,19 +130,30 @@ def draw_sample(target_size):
     return kept, drawn, len(shuffled)
 
 
+def save_abstracts(records):
+    """Write the abstracts of the given records to the local abstract cache."""
+    ABSTRACTS_PATH.write_text(json.dumps({record["pmid"]: record["abstract"] for record in records}))
+
+
 def build_sample(target_size=SAMPLE_SIZE):
-    """Draw the sample, record the pool size and papers walked, and save it."""
+    """Draw the sample, save it without abstracts, and cache the abstracts."""
     papers, n_drawn, population = draw_sample(target_size)
+    listed = [{key: value for key, value in paper.items() if key != "abstract"} for paper in papers]
     payload = {"seed": RANDOM_SEED, "target_size": target_size, "n_drawn": n_drawn,
-               "population": population, "papers": papers}
+               "population": population, "papers": listed}
     SAMPLE_PATH.write_text(json.dumps(payload))
+    save_abstracts(papers)
     return papers, payload
 
 
 def load_sample():
-    """Load the saved sample in draw order."""
+    """Load the saved sample in draw order, with abstracts from the local cache."""
     payload = json.loads(SAMPLE_PATH.read_text())
-    return payload["papers"], payload
+    if not ABSTRACTS_PATH.exists():
+        raise SystemExit(f"{ABSTRACTS_PATH.name} missing; run fetch_abstracts.py first")
+    abstracts = json.loads(ABSTRACTS_PATH.read_text())
+    papers = [{**paper, "abstract": abstracts.get(paper["pmid"], "")} for paper in payload["papers"]]
+    return papers, payload
 
 
 def main():

@@ -11,3 +11,6 @@ __pycache__/
 # kept locally, not published
 archive/
 SI_TODO.md
+
+# PubMed abstracts, re-fetched locally (code/fetch_abstracts.py)
+data/sample_abstracts.json

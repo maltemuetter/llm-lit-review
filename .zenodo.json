@@ -1,0 +1,13 @@
+{
+  "title": "Code and data for the literature review in \"The problem with synergy\"",
+  "upload_type": "software",
+  "description": "Automated literature review estimating how many PubMed papers (2010-2025) present drug synergy as desirable: enumeration of all papers whose title or abstract uses a synerg* word, a random sample of 1,000 papers, classification with two large language models under five prompts, and the analysis behind the figures and supplementary tables of the article.",
+  "creators": [
+    {"name": "Muetter, Malte", "affiliation": "ETH Zürich"},
+    {"name": "Angst, Daniel", "affiliation": "ETH Zürich"},
+    {"name": "Bonhoeffer, Sebastian", "affiliation": "ETH Zürich"},
+    {"name": "Regoes, Roland", "affiliation": "ETH Zürich"}
+  ],
+  "license": "mit",
+  "keywords": ["synergy", "drug interactions", "combination therapy", "literature review", "large language models"]
+}
