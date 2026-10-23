@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this code or data, please cite it as below."
+title: 'Code and data for the literature review in "The problem with synergy"'
+type: software
+authors:
+  - family-names: Muetter
+    given-names: Malte
+    affiliation: ETH Zürich
+  - family-names: Angst
+    given-names: Daniel
+    affiliation: ETH Zürich
+  - family-names: Bonhoeffer
+    given-names: Sebastian
+    affiliation: ETH Zürich
+  - family-names: Regoes
+    given-names: Roland
+    affiliation: ETH Zürich
+doi: 10.5281/zenodo.23601349
+repository-code: "https://github.com/maltemuetter/llm-lit-review"
+license: MIT
+version: 1.0.0
+date-released: 2026-10-23
+keywords:
+  - synergy
+  - drug interactions
+  - combination therapy
+  - literature review
+  - large language models
